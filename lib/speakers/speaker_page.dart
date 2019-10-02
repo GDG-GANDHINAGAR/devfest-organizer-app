@@ -153,7 +153,7 @@ class SpeakerPage extends StatelessWidget {
                                   style: Theme.of(context).textTheme.caption,
                                 ),
                                 CheckboxListTile(
-                                  value: speakerList[i].isVisible ?? false,
+                                  value: speakerList[i].isShown ?? false,
                                   title: Text("Is Visible"),
                                   onChanged: (value) {
                                     if (value == true) {
@@ -171,8 +171,7 @@ class SpeakerPage extends StatelessWidget {
                                                 child: Text("Yes"),
                                                 //this is where the actual magic✨(overwriting) happens
                                                 onPressed: () async {
-                                                  speakerList[i].isVisible =
-                                                      true;
+                                                  speakerList[i].isShown = true;
                                                   List<dynamic> temp =
                                                       List<dynamic>();
                                                   for (int i = 0;
@@ -209,7 +208,7 @@ class SpeakerPage extends StatelessWidget {
                                           );
                                         },
                                       );
-                                      // speakerList[i].isVisible = true;
+                                      // speakerList[i].isShown = true;
                                       // List<dynamic> temp = List<dynamic>();
                                       // for (int i = 0;
                                       //     i < snapshot.data.data["data"].length;
@@ -240,7 +239,7 @@ class SpeakerPage extends StatelessWidget {
                                               FlatButton(
                                                 child: Text("Yes"),
                                                 onPressed: () async {
-                                                  speakerList[i].isVisible =
+                                                  speakerList[i].isShown =
                                                       false;
                                                   List<dynamic> temp =
                                                       List<dynamic>();
