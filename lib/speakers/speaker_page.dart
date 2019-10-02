@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ class SpeakerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Speakers"),
+        title: Text("Speakers Settings"),
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance
@@ -49,9 +50,9 @@ class SpeakerPage extends StatelessWidget {
                 shrinkWrap: true,
                 itemBuilder: (c, i) {
                   return Card(
-                    elevation: 0.0,
+                    elevation: 5.0,
                     child: Padding(
-                      padding: const EdgeInsets.all(12.0),
+                      padding: const EdgeInsets.all(7.0),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
@@ -90,47 +91,56 @@ class SpeakerPage extends StatelessWidget {
                                       width: MediaQuery.of(context).size.width *
                                           0.2,
                                       height: 5,
-                                      color: Colors.red,
+                                      color: Colors.primaries[Random()
+                                          .nextInt(Colors.primaries.length)],
                                     ),
                                   ],
                                 ),
                                 SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  speakerList[i].speakerDesc,
-                                  style: Theme.of(context).textTheme.subtitle,
-                                ),
-                                SizedBox(
-                                  height: 10,
+                                  height: 3,
                                 ),
                                 Text(
                                   speakerList[i].speakerSession,
                                   style: Theme.of(context).textTheme.caption,
                                 ),
-                                CheckboxListTile(
-                                  value: speakerList[i].isShown ?? false,
-                                  title: Text("Is Visible"),
-                                  onChanged: (value) {
-                                    return isShownConfirmation(
-                                      context: context,
-                                      i: i,
-                                      snapshot: snapshot,
-                                      turnOn: value,
-                                    );
-                                  },
+                                Row(
+                                  children: <Widget>[
+                                    Text("Visibility "),
+                                    Switch(
+                                        value: speakerList[i].isShown ?? false,
+                                        onChanged: (value) {
+                                          return isShownConfirmation(
+                                            context: context,
+                                            i: i,
+                                            snapshot: snapshot,
+                                            turnOn: value,
+                                          );
+                                        }),
+                                    SizedBox(width: 5),
+                                    Icon(speakerList[i].isShown
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
+                                  ],
                                 ),
-                                CheckboxListTile(
-                                  value: speakerList[i].isFeatured ?? false,
-                                  title: Text("Is Featured"),
-                                  onChanged: (value) {
-                                    return isFeaturedConfirmation(
-                                      context: context,
-                                      i: i,
-                                      snapshot: snapshot,
-                                      turnOn: value,
-                                    );
-                                  },
+                                Row(
+                                  children: <Widget>[
+                                    Text("Featured"),
+                                    Switch(
+                                      value: speakerList[i].isFeatured ?? false,
+                                      onChanged: (value) {
+                                        return isFeaturedConfirmation(
+                                          context: context,
+                                          i: i,
+                                          snapshot: snapshot,
+                                          turnOn: value,
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(width: 5),
+                                    Icon(speakerList[i].isFeatured
+                                        ? Icons.star
+                                        : Icons.star_border),
+                                  ],
                                 ),
                               ],
                             ),
@@ -169,7 +179,7 @@ class SpeakerPage extends StatelessWidget {
           actions: <Widget>[
             FlatButton(
               child: Text("Yes"),
-              //this is where the actual magic✨(overwriting) happens
+              // this is where the actual magic✨(overwriting) happens
               onPressed: () async {
                 //if turnOn is true, we need to turn the isShown on
                 speakerList[i].isShown = turnOn ? true : false;
@@ -226,7 +236,7 @@ class SpeakerPage extends StatelessWidget {
           actions: <Widget>[
             FlatButton(
               child: Text("Yes"),
-              //this is where the actual magic✨(overwriting) happens
+              // this is where the actual magic✨(overwriting) happens
               onPressed: () async {
                 //if turnOn is true, we need to turn the isShown on
                 speakerList[i].isFeatured = turnOn ? true : false;
