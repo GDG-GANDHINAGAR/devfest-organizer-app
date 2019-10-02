@@ -7,50 +7,6 @@ class SpeakerPage extends StatelessWidget {
   static const String routeName = "/speakers";
   static List<Speaker> speakerList;
 
-  // Widget socialActions(context, Speaker speaker) => FittedBox(
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //         children: <Widget>[
-  //           IconButton(
-  //             icon: Icon(
-  //               FontAwesomeIcons.facebookF,
-  //               size: 15,
-  //             ),
-  //             onPressed: () {
-  //               launch(speaker.fbUrl);
-  //             },
-  //           ),
-  //           IconButton(
-  //             icon: Icon(
-  //               FontAwesomeIcons.twitter,
-  //               size: 15,
-  //             ),
-  //             onPressed: () {
-  //               launch(speaker.twitterUrl);
-  //             },
-  //           ),
-  //           IconButton(
-  //             icon: Icon(
-  //               FontAwesomeIcons.linkedinIn,
-  //               size: 15,
-  //             ),
-  //             onPressed: () {
-  //               launch(speaker.linkedinUrl);
-  //             },
-  //           ),
-  //           IconButton(
-  //             icon: Icon(
-  //               FontAwesomeIcons.github,
-  //               size: 15,
-  //             ),
-  //             onPressed: () {
-  //               launch(speaker.githubUrl);
-  //             },
-  //           ),
-  //         ],
-  //       ),
-  //     );
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,132 +109,27 @@ class SpeakerPage extends StatelessWidget {
                                   style: Theme.of(context).textTheme.caption,
                                 ),
                                 CheckboxListTile(
-                                  value: speakerList[i].isVisible ?? false,
+                                  value: speakerList[i].isShown ?? false,
                                   title: Text("Is Visible"),
                                   onChanged: (value) {
-                                    if (value == true) {
-                                      //show confirmation dialog for changing values
-                                      return showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Are you sure?"),
-                                            content: Text(
-                                                "Speaker ${speakerList[i].speakerName} and it's details would be visible on the website and app.\nAre you sure you wish to do this?"),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text("Yes"),
-                                                //this is where the actual magic✨(overwriting) happens
-                                                onPressed: () async {
-                                                  speakerList[i].isVisible =
-                                                      true;
-                                                  List<dynamic> temp =
-                                                      List<dynamic>();
-                                                  for (int i = 0;
-                                                      i <
-                                                          snapshot
-                                                              .data
-                                                              .data["data"]
-                                                              .length;
-                                                      i++) {
-                                                    temp.add(speakerList[i]
-                                                        .toJson());
-                                                  }
-                                                  await Firestore.instance
-                                                      .collection("speakers")
-                                                      .document("dummy_data")
-                                                      .updateData(
-                                                    {
-                                                      "data": temp,
-                                                    },
-                                                  ).then((onValue) {
-                                                    print(
-                                                        "Showing speaker ${speakerList[i].speakerName}");
-                                                    Navigator.of(context).pop();
-                                                  });
-                                                },
-                                              ),
-                                              FlatButton(
-                                                child: Text("Cancel"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                      // speakerList[i].isVisible = true;
-                                      // List<dynamic> temp = List<dynamic>();
-                                      // for (int i = 0;
-                                      //     i < snapshot.data.data["data"].length;
-                                      //     i++) {
-                                      //   temp.add(speakerList[i].toJson());
-                                      // }
-                                      // await Firestore.instance
-                                      //     .collection("speakers")
-                                      //     .document("dummy_data")
-                                      //     .updateData(
-                                      //   {
-                                      //     "data": temp,
-                                      //   },
-                                      // ).then((onValue) {
-                                      //   print("Entered values on Firestore");
-                                      // });
-                                    } else {
-                                      //show confirmation dialog for changing values
-                                      return showDialog(
-                                        context: context,
-                                        barrierDismissible: true,
-                                        builder: (BuildContext context) {
-                                          return AlertDialog(
-                                            title: Text("Are you sure?"),
-                                            content: Text(
-                                                "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to do this?"),
-                                            actions: <Widget>[
-                                              FlatButton(
-                                                child: Text("Yes"),
-                                                onPressed: () async {
-                                                  speakerList[i].isVisible =
-                                                      false;
-                                                  List<dynamic> temp =
-                                                      List<dynamic>();
-                                                  for (int i = 0;
-                                                      i <
-                                                          snapshot
-                                                              .data
-                                                              .data["data"]
-                                                              .length;
-                                                      i++) {
-                                                    temp.add(speakerList[i]
-                                                        .toJson());
-                                                  }
-                                                  await Firestore.instance
-                                                      .collection("speakers")
-                                                      .document("dummy_data")
-                                                      .updateData(
-                                                    {
-                                                      "data": temp,
-                                                    },
-                                                  ).then((onValue) {
-                                                    print(
-                                                        "Hiding speaker ${speakerList[i].speakerName} ");
-                                                    Navigator.of(context).pop();
-                                                  });
-                                                },
-                                              ),
-                                              FlatButton(
-                                                child: Text("Cancel"),
-                                                onPressed: () {
-                                                  Navigator.of(context).pop();
-                                                },
-                                              ),
-                                            ],
-                                          );
-                                        },
-                                      );
-                                    }
+                                    return isShownConfirmation(
+                                      context: context,
+                                      i: i,
+                                      snapshot: snapshot,
+                                      turnOn: value,
+                                    );
+                                  },
+                                ),
+                                CheckboxListTile(
+                                  value: speakerList[i].isFeatured ?? false,
+                                  title: Text("Is Featured"),
+                                  onChanged: (value) {
+                                    return isFeaturedConfirmation(
+                                      context: context,
+                                      i: i,
+                                      snapshot: snapshot,
+                                      turnOn: value,
+                                    );
                                   },
                                 ),
                               ],
@@ -296,4 +147,162 @@ class SpeakerPage extends StatelessWidget {
       ),
     );
   }
+
+  Future<Widget> isShownConfirmation({
+    @required BuildContext context,
+    @required int i,
+    @required AsyncSnapshot<DocumentSnapshot> snapshot,
+    @required bool turnOn,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Are you sure?"),
+          //control content according to boolean value
+          content: turnOn
+              ? Text(
+                  "Speaker ${speakerList[i].speakerName} and it's details would be visible on the website and app.\nAre you sure you wish to do this?")
+              : Text(
+                  "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to do this?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Yes"),
+              //this is where the actual magic✨(overwriting) happens
+              onPressed: () async {
+                //if turnOn is true, we need to turn the isShown on
+                speakerList[i].isShown = turnOn ? true : false;
+                List<dynamic> temp = List<dynamic>();
+                for (int i = 0; i < snapshot.data.data["data"].length; i++) {
+                  temp.add(speakerList[i].toJson());
+                }
+                await Firestore.instance
+                    .collection("speakers")
+                    .document("dummy_data")
+                    .updateData(
+                  {
+                    "data": temp,
+                  },
+                ).then((onValue) {
+                  turnOn
+                      ? print("Showing speaker ${speakerList[i].speakerName}")
+                      : print("Hiding speaker ${speakerList[i].speakerName} ");
+
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Widget> isFeaturedConfirmation({
+    @required BuildContext context,
+    @required int i,
+    @required AsyncSnapshot<DocumentSnapshot> snapshot,
+    @required bool turnOn,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Are you sure?"),
+          //control content according to boolean value
+          content: turnOn
+              ? Text(
+                  "Speaker ${speakerList[i].speakerName} would be featured on the website.\nAre you sure you wish to do this?")
+              : Text(
+                  "Speaker ${speakerList[i].speakerName} would be not featured on the website.\nAre you sure you wish to do this?"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Yes"),
+              //this is where the actual magic✨(overwriting) happens
+              onPressed: () async {
+                //if turnOn is true, we need to turn the isShown on
+                speakerList[i].isFeatured = turnOn ? true : false;
+                List<dynamic> temp = List<dynamic>();
+                for (int i = 0; i < snapshot.data.data["data"].length; i++) {
+                  temp.add(speakerList[i].toJson());
+                }
+                await Firestore.instance
+                    .collection("speakers")
+                    .document("dummy_data")
+                    .updateData(
+                  {
+                    "data": temp,
+                  },
+                ).then((onValue) {
+                  turnOn
+                      ? print("Featuring speaker ${speakerList[i].speakerName}")
+                      : print(
+                          "NOT Featuring speaker ${speakerList[i].speakerName} ");
+
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Future<Widget> isShownConfirmationOff(
+  //     {@required context, @required i, @required snapshot}) {
+  //   return showDialog(
+  //     context: context,
+  //     barrierDismissible: true,
+  //     builder: (BuildContext context) {
+  //       return AlertDialog(
+  //         title: Text("Are you sure?"),
+  //         content: Text(
+  //             "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to do this?"),
+  //         actions: <Widget>[
+  //           FlatButton(
+  //             child: Text("Yes"),
+  //             onPressed: () async {
+  //               speakerList[i].isShown = false;
+  //               List<dynamic> temp = List<dynamic>();
+  //               for (int i = 0; i < snapshot.data.data["data"].length; i++) {
+  //                 temp.add(speakerList[i].toJson());
+  //               }
+  //               await Firestore.instance
+  //                   .collection("speakers")
+  //                   .document("dummy_data")
+  //                   .updateData(
+  //                 {
+  //                   "data": temp,
+  //                 },
+  //               ).then((onValue) {
+  //                 Navigator.of(context).pop();
+  //               });
+  //             },
+  //           ),
+  //           FlatButton(
+  //             child: Text("Cancel"),
+  //             onPressed: () {
+  //               Navigator.of(context).pop();
+  //             },
+  //           ),
+  //         ],
+  //       );
+  //     },
+  //   );
+  // }
 }
