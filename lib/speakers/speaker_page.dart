@@ -194,7 +194,7 @@ class SpeakerPage extends StatelessWidget {
                                                     },
                                                   ).then((onValue) {
                                                     print(
-                                                        "Entered values on Firestore");
+                                                        "Showing speaker ${speakerList[i].speakerName}");
                                                     Navigator.of(context).pop();
                                                   });
                                                 },
@@ -263,7 +263,7 @@ class SpeakerPage extends StatelessWidget {
                                                     },
                                                   ).then((onValue) {
                                                     print(
-                                                        "Entered values on Firestore");
+                                                        "Hiding speaker ${speakerList[i].speakerName} ");
                                                     Navigator.of(context).pop();
                                                   });
                                                 },

@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                     },
                   ),
                   // true // add condition here
-                  snapshot.data["meta"]["feedback_active"] ?? true
+                  snapshot.data["meta"]["feedback_active"] ?? false
                       ? RaisedButton(
                           child: Text("Disable Feedback"),
                           onPressed: () {
