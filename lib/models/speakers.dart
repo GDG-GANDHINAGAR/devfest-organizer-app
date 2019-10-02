@@ -25,7 +25,7 @@ class Speaker {
   String speakerName;
   String speakerDesc;
   String speakerImage;
-  String speakerInfo;
+  // String speakerInfo;
   String speakerId;
   String fbUrl;
   String twitterUrl;
@@ -47,7 +47,7 @@ class Speaker {
     this.speakerName,
     this.speakerDesc,
     this.speakerImage,
-    this.speakerInfo,
+    // this.speakerInfo,
     this.speakerId,
     this.fbUrl,
     this.twitterUrl,
@@ -70,7 +70,7 @@ class Speaker {
     speakerName = json['speaker_name'];
     speakerDesc = json['speaker_desc'];
     speakerImage = json['speaker_image'];
-    speakerInfo = json['speaker_info'];
+    // speakerInfo = json['speaker_info'];
     speakerId = json['speaker_id'];
     fbUrl = json['fb_url'];
     twitterUrl = json['twitter_url'];
@@ -94,7 +94,7 @@ class Speaker {
     data['speaker_name'] = this.speakerName;
     data['speaker_desc'] = this.speakerDesc;
     data['speaker_image'] = this.speakerImage;
-    data['speaker_info'] = this.speakerInfo;
+    // data['speaker_info'] = this.speakerInfo;
     data['speaker_id'] = this.speakerId;
     data['fb_url'] = this.fbUrl;
     data['twitter_url'] = this.twitterUrl;
