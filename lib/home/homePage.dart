@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: Firestore.instance
-          .collection("speakers")
+          .collection("homepage")
           .document("dummy_data")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -25,6 +25,12 @@ class _HomePageState extends State<HomePage> {
             child: CircularProgressIndicator(),
           );
         else {
+          if (snapshot.hasError) {
+            return Center(
+              child: Text("Error Occured: ${snapshot.error}"),
+            );
+          }
+          // print(snapshot.data["meta"]["feedback_active"]);
           return Container(
             child: Center(
               child: Column(
@@ -42,9 +48,10 @@ class _HomePageState extends State<HomePage> {
                       );
                     },
                   ),
-                  true// add condition here
+                  // true // add condition here
+                  snapshot.data["meta"]["feedback_active"] ?? true
                       ? RaisedButton(
-                          child: Text("Enable Feedback"),
+                          child: Text("Disable Feedback"),
                           onPressed: () {
                             return showDialog(
                               barrierDismissible: true,
@@ -52,13 +59,21 @@ class _HomePageState extends State<HomePage> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   content: const Text(
-                                      "This will make the Show ID button on the Android app get replaced with a feedback form.\nUse it only at the end of the fest"),
-                                  title: Text("Enable Feedback"),
+                                      "This will make the Feedback button on the Android app get replaced with an Show ID button.\nIt is advised to use it before the fest begins."),
+                                  title: Text("Disable Feedback"),
                                   actions: <Widget>[
                                     FlatButton(
-                                      child: Text("Turn On"),
-                                      onPressed: () {
-                                        //do operation
+                                      child: Text("Turn Off"),
+                                      onPressed: () async {
+                                        await Firestore.instance
+                                            .collection("homepage")
+                                            .document("dummy_data")
+                                            .updateData({
+                                          "meta.feedback_active": false,
+                                        }).then((onValue) {
+                                          print("Feedback turned off");
+                                          Navigator.of(context).pop();
+                                        });
                                       },
                                     ),
                                     FlatButton(
@@ -74,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                           },
                         )
                       : RaisedButton(
-                          child: Text("Disable Feedback"),
+                          child: Text("Enable Feedback"),
                           onPressed: () {
                             return showDialog(
                               barrierDismissible: true,
@@ -82,13 +97,21 @@ class _HomePageState extends State<HomePage> {
                               builder: (BuildContext context) {
                                 return AlertDialog(
                                   content: const Text(
-                                      "This will make the Feedback button on the Android app get replaced with an Show ID button.\nUse it at the beginning and during the fest."),
-                                  title: Text("Disable Feedback"),
+                                      "This will make the Show ID button on the Android app get replaced with a feedback form.\nIt is adviced to use it only at the end of the fest."),
+                                  title: Text("Enable Feedback"),
                                   actions: <Widget>[
                                     FlatButton(
-                                      child: Text("Turn Off"),
-                                      onPressed: () {
-                                        //do operation
+                                      child: Text("Turn On"),
+                                      onPressed: () async {
+                                        await Firestore.instance
+                                            .collection("homepage")
+                                            .document("dummy_data")
+                                            .updateData({
+                                          "meta.feedback_active": true,
+                                        }).then((onValue) {
+                                          print("Feedback turned on");
+                                          Navigator.of(context).pop();
+                                        });
                                       },
                                     ),
                                     FlatButton(
