@@ -153,7 +153,7 @@ class SpeakerPage extends StatelessWidget {
                                   style: Theme.of(context).textTheme.caption,
                                 ),
                                 CheckboxListTile(
-                                  value: speakerList[i].isVisible,
+                                  value: speakerList[i].isVisible ?? false,
                                   title: Text("Is Visible"),
                                   onChanged: (value) {
                                     if (value == true) {
@@ -165,7 +165,7 @@ class SpeakerPage extends StatelessWidget {
                                           return AlertDialog(
                                             title: Text("Are you sure?"),
                                             content: Text(
-                                                "Speaker ${speakerList[i].speakerName} and it's details would be visible on the website and app.\nAre you sure you wish to this?"),
+                                                "Speaker ${speakerList[i].speakerName} and it's details would be visible on the website and app.\nAre you sure you wish to do this?"),
                                             actions: <Widget>[
                                               FlatButton(
                                                 child: Text("Yes"),
@@ -235,7 +235,7 @@ class SpeakerPage extends StatelessWidget {
                                           return AlertDialog(
                                             title: Text("Are you sure?"),
                                             content: Text(
-                                                "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to this?"),
+                                                "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to do this?"),
                                             actions: <Widget>[
                                               FlatButton(
                                                 child: Text("Yes"),
