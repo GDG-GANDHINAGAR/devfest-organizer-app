@@ -11,7 +11,7 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("DevFestGnr 2k19"),
+        title: Text("DevFest Dashboard"),
       ),
       body: StreamBuilder<FirebaseUser>(
         stream: FirebaseAuth.instance.onAuthStateChanged,
@@ -29,6 +29,7 @@ class SignIn extends StatelessWidget {
                   child: Text("Sign In"),
                   onPressed: () async {
                     FirebaseUser user = await _handleGoogleSignIn();
+                    print(user);
                     // setBasicData(user);
                   },
                 ),
@@ -52,15 +53,4 @@ class SignIn extends StatelessWidget {
     FirebaseUser user = authResult.user;
     return user;
   }
-
-  // void setBasicData(FirebaseUser user) async {
-  //   await Firestore.instance.collection('users').document(user.email).setData(
-  //     {
-  //       "display_name": user.displayName,
-  //       "email": user.email,
-  //       "uid": user.uid,
-  //       "photo_url": user.photoUrl,
-  //     },
-  //   );
-  // }
 }
