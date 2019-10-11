@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:organizers_app/speakers/speaker_page.dart';
+import 'package:barcode_scan/barcode_scan.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
@@ -11,6 +13,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String id;
+  Future _scanqr() async {
+    try {
+      String result = await BarcodeScanner.scan();
+      setState(() {
+        id = result;
+      });
+    } on PlatformException catch (e) {
+      if (e.code == BarcodeScanner.CameraAccessDenied) {
+        setState(() {
+          id = "camera permission denied";
+        });
+      } else {
+        setState(() {
+          id = "an error occured $e";
+        });
+      }
+    } on FormatException {
+      setState(() {
+        id = " back button pressed";
+      });
+    } catch (e) {
+      setState(() {
+        id = "an error occured $e";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -126,6 +156,12 @@ class _HomePageState extends State<HomePage> {
                             );
                           },
                         ),
+                  new FloatingActionButton.extended(
+                    icon: Icon(Icons.camera),
+                    label: Text("Scan me"),
+                    onPressed: _scanqr,
+                    tooltip: "scan code",
+                  )
                 ],
               ),
             ),
