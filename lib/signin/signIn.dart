@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:organizers_app/home/homePage.dart';
+import 'package:organizers_app/home/scanner.dart';
 
 class SignIn extends StatelessWidget {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -12,6 +13,18 @@ class SignIn extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text("DevFest Dashboard"),
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.camera_alt),
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (BuildContext context) {
+                return ScannerPage();
+              },
+            ),
+          );
+        },
       ),
       body: StreamBuilder<FirebaseUser>(
         stream: FirebaseAuth.instance.onAuthStateChanged,
