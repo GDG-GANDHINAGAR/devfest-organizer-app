@@ -26,22 +26,23 @@ class Speaker {
   String speakerDesc;
   String speakerImage;
   // String speakerInfo;
-  String speakerId;
+  int speakerId;
   String fbUrl;
   String twitterUrl;
   String linkedinUrl;
   String githubUrl;
   String speakerSession;
-  String sessionId;
+  int sessionId;
   String sessionDetail;
   String speakerBio;
   String track;
   bool isFeatured;
-  bool isShown;
+  bool isVisible;
   String company;
   String sessionLevel;
   String startTime;
   String totalTime;
+  int index;
 
   Speaker({
     this.speakerName,
@@ -58,12 +59,13 @@ class Speaker {
     this.sessionDetail,
     this.speakerBio,
     this.isFeatured,
-    this.isShown,
+    this.isVisible,
     this.track,
     this.company,
     this.sessionLevel,
     this.startTime,
     this.totalTime,
+    this.index,
   });
 
   Speaker.fromJson(Map<String, dynamic> json) {
@@ -81,12 +83,13 @@ class Speaker {
     sessionDetail = json["session_details"];
     speakerBio = json["speaker_bio"];
     isFeatured = json["is_featured"];
-    isShown = json["show"];
+    isVisible = json["show"];
     track = json["track"];
     company = json["company"];
     sessionLevel = json["session_level"];
     startTime = json["start_time"];
     totalTime = json["total_time"];
+    index = json["index"];
   }
 
   Map<String, dynamic> toJson() {
@@ -105,12 +108,13 @@ class Speaker {
     data["session_details"] = this.sessionDetail;
     data["speaker_bio"] = this.speakerBio;
     data["is_featured"] = this.isFeatured;
-    data["show"] = this.isShown;
+    data["show"] = this.isVisible;
     data["track"] = this.track;
     data["company"] = this.company;
     data["session_level"] = this.sessionLevel;
     data["start_time"] = this.startTime;
     data["total_time"] = this.totalTime;
+    data["index"] = this.index;
     return data;
   }
 }

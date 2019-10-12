@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:organizers_app/models/speakers.dart';
 
 class SpeakerPage extends StatelessWidget {
-  static const String routeName = "/speakers";
   static List<Speaker> speakerList;
+
+  final TextEditingController totalTimeController = TextEditingController();
+
+  final TextEditingController startTimeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +48,11 @@ class SpeakerPage extends StatelessWidget {
                   child: Text("Coming soon"),
                 );
               }
+
+              speakerList.sort((a, b) {
+                return a.speakerId.compareTo(b.speakerId);
+              });
+
               return ListView.builder(
                 itemCount: speakerList.length,
                 shrinkWrap: true,
@@ -67,7 +75,7 @@ class SpeakerPage extends StatelessWidget {
                             ),
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 10,
                           ),
                           Expanded(
                             child: Column(
@@ -104,42 +112,84 @@ class SpeakerPage extends StatelessWidget {
                                   style: Theme.of(context).textTheme.caption,
                                 ),
                                 Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: <Widget>[
-                                    Text("Visibility "),
-                                    Switch(
-                                        value: speakerList[i].isShown ?? false,
-                                        onChanged: (value) {
-                                          return isShownConfirmation(
-                                            context: context,
-                                            i: i,
-                                            snapshot: snapshot,
-                                            turnOn: value,
-                                          );
-                                        }),
-                                    SizedBox(width: 5),
-                                    Icon(speakerList[i].isShown
-                                        ? Icons.visibility
-                                        : Icons.visibility_off),
-                                  ],
-                                ),
-                                Row(
-                                  children: <Widget>[
-                                    Text("Featured"),
-                                    Switch(
-                                      value: speakerList[i].isFeatured ?? false,
-                                      onChanged: (value) {
-                                        return isFeaturedConfirmation(
+                                    Row(
+                                      children: <Widget>[
+                                        Text("Visibility "),
+                                        Switch(
+                                            value: speakerList[i].isVisible ??
+                                                false,
+                                            onChanged: (value) {
+                                              return isVisibleConfirmation(
+                                                context: context,
+                                                i: i,
+                                                snapshot: snapshot,
+                                                turnOn: value,
+                                              );
+                                            }),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          speakerList[i].isVisible
+                                              ? Icons.visibility
+                                              : Icons.visibility_off,
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      child: Text(
+                                          "${speakerList[i].startTime == "" ? "Start" : speakerList[i].startTime}"),
+                                      onTap: () {
+                                        return startTimeConfirmation(
                                           context: context,
                                           i: i,
                                           snapshot: snapshot,
-                                          turnOn: value,
                                         );
                                       },
                                     ),
-                                    SizedBox(width: 5),
-                                    Icon(speakerList[i].isFeatured
-                                        ? Icons.star
-                                        : Icons.star_border),
+                                    SizedBox(width: 3),
+                                  ],
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Row(
+                                      children: <Widget>[
+                                        Text("Featured"),
+                                        Switch(
+                                          value: speakerList[i].isFeatured ??
+                                              false,
+                                          onChanged: (value) {
+                                            return isFeaturedConfirmation(
+                                              context: context,
+                                              i: i,
+                                              snapshot: snapshot,
+                                              turnOn: value,
+                                            );
+                                          },
+                                        ),
+                                        SizedBox(width: 5),
+                                        Icon(
+                                          speakerList[i].isFeatured
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                        ),
+                                      ],
+                                    ),
+                                    GestureDetector(
+                                      child: Text(
+                                          "${speakerList[i].totalTime == "" ? "Total" : speakerList[i].totalTime}"),
+                                      onTap: () {
+                                        return totalTimeConfirmation(
+                                          context: context,
+                                          i: i,
+                                          snapshot: snapshot,
+                                        );
+                                      },
+                                    ),
+                                    SizedBox(width: 3),
                                   ],
                                 ),
                               ],
@@ -158,7 +208,7 @@ class SpeakerPage extends StatelessWidget {
     );
   }
 
-  Future<Widget> isShownConfirmation({
+  Future<Widget> isVisibleConfirmation({
     @required BuildContext context,
     @required int i,
     @required AsyncSnapshot<DocumentSnapshot> snapshot,
@@ -181,8 +231,8 @@ class SpeakerPage extends StatelessWidget {
               child: Text("Yes"),
               // this is where the actual magic✨(overwriting) happens
               onPressed: () async {
-                //if turnOn is true, we need to turn the isShown on
-                speakerList[i].isShown = turnOn ? true : false;
+                //if turnOn is true, we need to turn the isVisible on
+                speakerList[i].isVisible = turnOn ? true : false;
                 List<dynamic> temp = List<dynamic>();
                 for (int i = 0; i < snapshot.data.data["data"].length; i++) {
                   temp.add(speakerList[i].toJson());
@@ -238,7 +288,7 @@ class SpeakerPage extends StatelessWidget {
               child: Text("Yes"),
               // this is where the actual magic✨(overwriting) happens
               onPressed: () async {
-                //if turnOn is true, we need to turn the isShown on
+                //if turnOn is true, we need to turn the isVisible on
                 speakerList[i].isFeatured = turnOn ? true : false;
                 List<dynamic> temp = List<dynamic>();
                 for (int i = 0; i < snapshot.data.data["data"].length; i++) {
@@ -273,46 +323,109 @@ class SpeakerPage extends StatelessWidget {
     );
   }
 
-  // Future<Widget> isShownConfirmationOff(
-  //     {@required context, @required i, @required snapshot}) {
-  //   return showDialog(
-  //     context: context,
-  //     barrierDismissible: true,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: Text("Are you sure?"),
-  //         content: Text(
-  //             "Speaker ${speakerList[i].speakerName} and it's details would be hiden from the website and app.\nAre you sure you wish to do this?"),
-  //         actions: <Widget>[
-  //           FlatButton(
-  //             child: Text("Yes"),
-  //             onPressed: () async {
-  //               speakerList[i].isShown = false;
-  //               List<dynamic> temp = List<dynamic>();
-  //               for (int i = 0; i < snapshot.data.data["data"].length; i++) {
-  //                 temp.add(speakerList[i].toJson());
-  //               }
-  //               await Firestore.instance
-  //                   .collection("speakers")
-  //                   .document("dummy_data")
-  //                   .updateData(
-  //                 {
-  //                   "data": temp,
-  //                 },
-  //               ).then((onValue) {
-  //                 Navigator.of(context).pop();
-  //               });
-  //             },
-  //           ),
-  //           FlatButton(
-  //             child: Text("Cancel"),
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //             },
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
+  Future<Widget> totalTimeConfirmation({
+    @required BuildContext context,
+    @required int i,
+    @required AsyncSnapshot<DocumentSnapshot> snapshot,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Update total time"),
+          content: TextFormField(
+            controller: totalTimeController,
+            decoration: InputDecoration(
+              hintText: "Total Time (eg. 30 Mins)",
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("Save"),
+              onPressed: () async {
+                speakerList[i].totalTime = totalTimeController.text;
+                List<dynamic> temp = List<dynamic>();
+                for (int i = 0; i < snapshot.data.data["data"].length; i++) {
+                  temp.add(speakerList[i].toJson());
+                }
+                await Firestore.instance
+                    .collection("speakers")
+                    .document("dummy_data")
+                    .updateData(
+                  {
+                    "data": temp,
+                  },
+                ).then((onValue) {
+                  print(
+                      "Updated Total time ${speakerList[i].totalTime} for ${speakerList[i].speakerName}");
+                  totalTimeController.clear();
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<Widget> startTimeConfirmation({
+    @required BuildContext context,
+    @required int i,
+    @required AsyncSnapshot<DocumentSnapshot> snapshot,
+  }) {
+    return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Update start time"),
+          content: TextFormField(
+            controller: startTimeController,
+            decoration: InputDecoration(
+              hintText: "Start Time (eg. 9:00 AM)",
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text("Cancel"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: Text("Save"),
+              onPressed: () async {
+                speakerList[i].startTime = startTimeController.text;
+                List<dynamic> temp = List<dynamic>();
+                for (int i = 0; i < snapshot.data.data["data"].length; i++) {
+                  temp.add(speakerList[i].toJson());
+                }
+                await Firestore.instance
+                    .collection("speakers")
+                    .document("dummy_data")
+                    .updateData(
+                  {
+                    "data": temp,
+                  },
+                ).then((onValue) {
+                  print(
+                      "Updated Start time ${speakerList[i].startTime} for ${speakerList[i].speakerName}");
+                  startTimeController.clear();
+                  Navigator.of(context).pop();
+                });
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
