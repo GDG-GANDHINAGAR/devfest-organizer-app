@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,8 +63,9 @@ class SpeakerPage extends StatelessWidget {
                               width: MediaQuery.of(context).size.height * 0.15,
                             ),
                             child: CircleAvatar(
-                              backgroundImage:
-                                  NetworkImage(speakerList[i].speakerImage),
+                              backgroundImage: CachedNetworkImageProvider(
+                                speakerList[i].speakerImage,
+                              ),
                             ),
                           ),
                           SizedBox(
