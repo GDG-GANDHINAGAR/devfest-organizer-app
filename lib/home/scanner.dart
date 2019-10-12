@@ -15,6 +15,7 @@ class _ScannerPageState extends State<ScannerPage> {
   DocumentSnapshot snapshot;
   bool scanned = true;
   bool exists = true;
+  bool isUndoable = false;
   String id;
 
   @override
@@ -85,7 +86,8 @@ class _ScannerPageState extends State<ScannerPage> {
                         //when data is NOT been NULL
                         if (snapshot.data["data"][message][commodity] == true) {
                           message =
-                              "${commodity.toUpperCase()} ALREADY COLLECTED!!";
+                              "ID $id \n\n${commodity.toUpperCase()} ALREADY COLLECTED!!";
+                          isUndoable = false;
                         }
                         //if schwags have not been collected, only then
                         //set the schwags to TRUE
@@ -97,14 +99,17 @@ class _ScannerPageState extends State<ScannerPage> {
                             "data.$message.$commodity": true,
                           }).then((onValue) {
                             print("Data has been set");
-                            message = "ID $id \nMarked as Collected";
+                            message = "ID $id \n\nMarked as Collected";
+                            isUndoable = true;
                           });
                         }
                       } else {
                         message = "Scanned $id\n\nNO DATA FOUND";
+                        isUndoable = false;
                       }
                     } else {
                       message = "Start Scanning ;)";
+                      isUndoable = false;
                     }
 
                     setState(() {});
@@ -127,29 +132,35 @@ class _ScannerPageState extends State<ScannerPage> {
                       style: TextStyle(),
                     ),
                   ),
-                  onPressed: () async {
-                    snapshot = await Firestore.instance
-                        .collection("attendees")
-                        .document("data")
-                        .get();
-                    if (scanned == true &&
-                        exists == true &&
-                        snapshot.data["data"][id][commodity] == true) {
-                      await Firestore.instance
-                          .collection("attendees")
-                          .document("data")
-                          .updateData({
-                        "data.$id.$commodity": false,
-                      }).then((onValue) {
-                        print("Data has been unset");
-                        message = "ID $id \nMarked as NOT Collected";
-                      });
-                    } else {
-                      print("Nothing to UNDO");
-                      message = "Nothing to Undo";
-                    }
-                    setState(() {});
-                  },
+                  //if the operation is undoable, then make
+                  //the undo button disabled
+                  onPressed: isUndoable
+                      ? () async {
+                          snapshot = await Firestore.instance
+                              .collection("attendees")
+                              .document("data")
+                              .get();
+                          if (scanned == true &&
+                              exists == true &&
+                              snapshot.data["data"][id][commodity] == true) {
+                            await Firestore.instance
+                                .collection("attendees")
+                                .document("data")
+                                .updateData({
+                              "data.$id.$commodity": false,
+                            }).then((onValue) {
+                              print("Data has been unset");
+                              message = "ID $id \nMarked as NOT Collected";
+                              isUndoable = false;
+                            });
+                          } else {
+                            print("Nothing to UNDO");
+                            message = "Nothing to Undo";
+                            isUndoable = false;
+                          }
+                          setState(() {});
+                        }
+                      : null,
                 ),
               ],
             ),
