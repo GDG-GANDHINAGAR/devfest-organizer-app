@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:organizers_app/home/scanner.dart';
 import 'package:organizers_app/speakers/speaker_page.dart';
-import 'package:qrcode_reader/qrcode_reader.dart';
 
 class HomePage extends StatefulWidget {
   final FirebaseUser user;
@@ -42,7 +41,10 @@ class _HomePageState extends State<HomePage> {
                     child: Card(
                       child: ListTile(
                         // trailing: Icon(Icons.edit),
-                        leading: Icon(Icons.person),
+                        leading: Icon(
+                          Icons.person,
+                          size: 40,
+                        ),
                         title: Text("Edit Speaker Details"),
                         subtitle:
                             Text("Edit Speaker visibility and talk timings"),
@@ -65,7 +67,10 @@ class _HomePageState extends State<HomePage> {
                           padding: EdgeInsets.all(4.0),
                           child: Card(
                             child: ListTile(
-                              leading: Icon(Icons.feedback),
+                              leading: Icon(
+                                Icons.feedback,
+                                size: 40,
+                              ),
                               title: Text("Disable Feedback"),
                               subtitle: Text(
                                   "Toggle Feedback form visibility in app"),
@@ -108,49 +113,14 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                         )
-                      // RaisedButton(
-                      //     child: Text("Disable Feedback"),
-                      //     onPressed: () {
-                      //       return showDialog(
-                      //         barrierDismissible: true,
-                      //         context: context,
-                      //         builder: (BuildContext context) {
-                      //           return AlertDialog(
-                      //             content: const Text(
-                      //                 "This will make the Feedback button on the Android app get replaced with an Show ID button.\nIt is advised to use it before the fest begins."),
-                      //             title: Text("Disable Feedback"),
-                      //             actions: <Widget>[
-                      //               FlatButton(
-                      //                 child: Text("Turn Off"),
-                      //                 onPressed: () async {
-                      //                   await Firestore.instance
-                      //                       .collection("homepage")
-                      //                       .document("dummy_data")
-                      //                       .updateData({
-                      //                     "meta.feedback_active": false,
-                      //                   }).then((onValue) {
-                      //                     print("Feedback turned off");
-                      //                     Navigator.of(context).pop();
-                      //                   });
-                      //                 },
-                      //               ),
-                      //               FlatButton(
-                      //                 child: Text("Cancel"),
-                      //                 onPressed: () {
-                      //                   Navigator.of(context).pop();
-                      //                 },
-                      //               ),
-                      //             ],
-                      //           );
-                      //         },
-                      //       );
-                      //     },
-                      //   )
                       : Padding(
                           padding: EdgeInsets.all(4.0),
                           child: Card(
                             child: ListTile(
-                              leading: Icon(Icons.feedback),
+                              leading: Icon(
+                                Icons.feedback,
+                                size: 40,
+                              ),
                               title: Text("Enable Feedback"),
                               subtitle: Text(
                                   "Toggle Feedback form visibility in app"),
@@ -197,7 +167,10 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(4.0),
                     child: Card(
                       child: ListTile(
-                        leading: Icon(Icons.camera_alt),
+                        leading: Icon(
+                          Icons.camera_alt,
+                          size: 40,
+                        ),
                         title: Text("QR Code Scanner"),
                         subtitle: Text("Scan QR codes and verify tickets"),
                         isThreeLine: true,
@@ -213,44 +186,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  // : RaisedButton(
-                  //     child: Text("Enable Feedback"),
-                  //     onPressed: () {
-                  //       return showDialog(
-                  //         barrierDismissible: true,
-                  //         context: context,
-                  //         builder: (BuildContext context) {
-                  //           return AlertDialog(
-                  //             content: const Text(
-                  //                 "This will make the Show ID button on the Android app get replaced with a feedback form.\nIt is adviced to use it only at the end of the fest."),
-                  //             title: Text("Enable Feedback"),
-                  //             actions: <Widget>[
-                  //               FlatButton(
-                  //                 child: Text("Turn On"),
-                  //                 onPressed: () async {
-                  //                   await Firestore.instance
-                  //                       .collection("homepage")
-                  //                       .document("dummy_data")
-                  //                       .updateData({
-                  //                     "meta.feedback_active": true,
-                  //                   }).then((onValue) {
-                  //                     print("Feedback turned on");
-                  //                     Navigator.of(context).pop();
-                  //                   });
-                  //                 },
-                  //               ),
-                  //               FlatButton(
-                  //                 child: Text("Cancel"),
-                  //                 onPressed: () {
-                  //                   Navigator.of(context).pop();
-                  //                 },
-                  //               ),
-                  //             ],
-                  //           );
-                  //         },
-                  //       );
-                  //     },
-                  //   ),
                 ],
               ),
             ),
